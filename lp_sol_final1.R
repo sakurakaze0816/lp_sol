@@ -84,7 +84,7 @@ pb   <- txtProgressBar(max = nrow(cc), style=3)
 # eq(2)
 # 求rank0的解
 start_model_time <- Sys.time()                   # 程式運行時間
-for(i in 1:nrow(cc)){                            # eq(9)
+for(i in 1:nrow(cc)){                            # eq(4)
   f.obj0 <- c(cc[i,1],cc[i,2],cc[i,3],cc[i,4])   # for each item
   result <- lp("max",f.obj0,f.con0,f.dir0,f.rhs0)
   objvals0[i] <- result$objval
@@ -102,7 +102,7 @@ duration0 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs
 # eq(2) & eq(3) & eq(11)
 # 求rank1的解
 start_model_time <- Sys.time()                   # 程式運行時間
-for(i in 1:nrow(cc)){                            # eq(9)
+for(i in 1:nrow(cc)){                            # eq(4)
   f.obj1 <- c(cc[i,1],cc[i,2],cc[i,3],cc[i,4])   # for each item
   result <- lp("max",f.obj1,f.con1,f.dir1,f.rhs1)
   objvals1[i] <- result$objval
@@ -133,7 +133,7 @@ duration2 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs
 # eq(2) & eq(3) & eq(10) & eq(11)
 # 求rank3的解
 start_model_time <- Sys.time()                   # 程式運行時間
-for(i in 1:nrow(cc)){                            # eq(9)
+for(i in 1:nrow(cc)){                            # eq(4)
   f.obj2 <- c(cc[i,1],cc[i,2],cc[i,3],cc[i,4])   # for each item
   result <- lp("max",f.obj2,f.con2,f.dir2,f.rhs2)
   objvals2[i] <- result$objval
