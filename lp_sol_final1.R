@@ -49,7 +49,7 @@ f.con2 <- f.con1
 f.dir2 <- f.dir1
 f.rhs2 <- f.rhs1
 
-for(i in 1:3){                                  # eq(10)
+for(i in 1:3){                                  # eq(5)
   row_e <- rep(0,4)
   row_e[i] <- 1
   row_e[i+1] <- -1
@@ -124,13 +124,13 @@ for(i in 1:nrow(cc)){
   for(j in 1:nrow(cc)){
     sijp1[j,i] <- sum(solutions1[j,]*cc[i,])     # eq(4')
   }
-  sip1[i] <- mean(sijp1[,i])                     # eq(10')
+  sip1[i] <- mean(sijp1[,i])                     # eq(5')
   setTxtProgressBar(pb, i)                       # 程式運行進度條
 }
 end_model_time <- Sys.time()
 duration2 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(2) & eq(3) & eq(10) & eq(11)
+# eq(2) & eq(3) & eq(5) & eq(11)
 # 求rank3的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                            # eq(4)
@@ -148,14 +148,14 @@ for(i in 1:nrow(cc)){                            # eq(4)
 end_model_time <- Sys.time()
 duration3 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(2) & eq(3) & eq(10) & eq(11)
+# eq(2) & eq(3) & eq(5) & eq(11)
 # 求rank4的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                                             
   for(j in 1:nrow(cc)){
     sijp2[j,i] <- sum(solutions2[j,]*cc[i,])     # eq(4')
   }
-  sip2[i] <- mean(sijp2[,i])                     # eq(10')
+  sip2[i] <- mean(sijp2[,i])                     # eq(5')
   setTxtProgressBar(pb, i)                       # 程式運行進度條
 }
 end_model_time <- Sys.time()
