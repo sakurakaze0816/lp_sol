@@ -25,11 +25,11 @@ lp_data <- lp_data[!duplicated(cc), ]                                           
 cc <- cbind(lp_data$mean_norm,lp_data$TSignal_norm, lp_data$wc_norm, lp_data$wp_norm) # alternatives
 
 # start LP settings
-f.con0 <- matrix(c(rbind(cc[,1],cc[,2],cc[,3],cc[,4])), nrow=nrow(cc), byrow=TRUE)    # eq(7)
+f.con0 <- matrix(c(rbind(cc[,1],cc[,2],cc[,3],cc[,4])), nrow=nrow(cc), byrow=TRUE)    # eq(2)
 f.dir0 <- c(rep("<=",nrow(cc)))
 f.rhs0 <- rep(1,nrow(cc))
 
-f.con <- matrix(c(rbind(cc[,1],cc[,2],cc[,3],cc[,4]),1,1,1,1), nrow=nrow(cc)+1, byrow=TRUE)   # eq(7) & eq(11)
+f.con <- matrix(c(rbind(cc[,1],cc[,2],cc[,3],cc[,4]),1,1,1,1), nrow=nrow(cc)+1, byrow=TRUE)   # eq(2) & eq(11)
 f.dir <- c(rep("<=",nrow(cc)),'=')
 f.rhs <- rep(1,nrow(cc)+1)
 
@@ -81,7 +81,7 @@ pb   <- txtProgressBar(max = nrow(cc), style=3)
 
 # solve LP
 
-# eq(7)
+# eq(2)
 # 求rank0的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                            # eq(9)
@@ -99,7 +99,7 @@ for(i in 1:nrow(cc)){                            # eq(9)
 end_model_time <- Sys.time()
 duration0 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(7) & eq(8) & eq(11)
+# eq(2) & eq(8) & eq(11)
 # 求rank1的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                            # eq(9)
@@ -117,7 +117,7 @@ for(i in 1:nrow(cc)){                            # eq(9)
 end_model_time <- Sys.time()
 duration1 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(7) & eq(8) & eq(11)
+# eq(2) & eq(8) & eq(11)
 # 求rank2的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){
@@ -130,7 +130,7 @@ for(i in 1:nrow(cc)){
 end_model_time <- Sys.time()
 duration2 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(7) & eq(8) & eq(10) & eq(11)
+# eq(2) & eq(8) & eq(10) & eq(11)
 # 求rank3的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                            # eq(9)
@@ -148,7 +148,7 @@ for(i in 1:nrow(cc)){                            # eq(9)
 end_model_time <- Sys.time()
 duration3 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(7) & eq(8) & eq(10) & eq(11)
+# eq(2) & eq(8) & eq(10) & eq(11)
 # 求rank4的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                                             
