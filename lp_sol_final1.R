@@ -122,7 +122,7 @@ duration1 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){
   for(j in 1:nrow(cc)){
-    sijp1[j,i] <- sum(solutions1[j,]*cc[i,])     # eq(9')
+    sijp1[j,i] <- sum(solutions1[j,]*cc[i,])     # eq(4')
   }
   sip1[i] <- mean(sijp1[,i])                     # eq(10')
   setTxtProgressBar(pb, i)                       # 程式運行進度條
@@ -153,7 +153,7 @@ duration3 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                                             
   for(j in 1:nrow(cc)){
-    sijp2[j,i] <- sum(solutions2[j,]*cc[i,])     # eq(9')
+    sijp2[j,i] <- sum(solutions2[j,]*cc[i,])     # eq(4')
   }
   sip2[i] <- mean(sijp2[,i])                     # eq(10')
   setTxtProgressBar(pb, i)                       # 程式運行進度條
