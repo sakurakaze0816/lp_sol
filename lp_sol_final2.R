@@ -1,35 +1,35 @@
-# »~®t®e§Ô­È
+# èª¤å·®å®¹å¿å€¼
 min_weight_default <- 0.000001
 
-# ¿ë»{»P¦w¸Ë
+# è¾¨èªèˆ‡å®‰è£
 toInstall <- c("lpSolve","openxlsx","sqldf","magrittr")
 packages <- installed.packages()
 whichInstall <- which(!(toInstall %in% packages))
 for(i in whichInstall){
   istl <- toInstall[i]
-  print(paste("*** ¨t²Î¦w¸Ë®M¥ó (²Ä¤@¦¸°õ¦æ®É)¡G",istl,sep=""))
+  print(paste("*** ç³»çµ±å®‰è£å¥—ä»¶ (ç¬¬ä¸€æ¬¡åŸ·è¡Œæ™‚)ï¼š",istl,sep=""))
   install.packages(istl, quiet = TRUE , repos="https://cloud.r-project.org")
-  print(paste("*** ¦¨¥\¦w¸Ë¡G",istl,sep=""))
+  print(paste("*** æˆåŠŸå®‰è£ï¼š",istl,sep=""))
 }
-print("*** ¶}©l¡G¸ü¤J®M¥ó")
+print("*** é–‹å§‹ï¼šè¼‰å…¥å¥—ä»¶")
 
 library(sqldf)
 library(lpSolve)
 library(openxlsx)
 
-#ÅªÀÉ
+#è®€æª”
 lp_data <- read.csv("cc-221014.csv")
 cc <- cbind(lp_data$mean_norm,lp_data$TSignal_norm, lp_data$wc_norm, lp_data$wp_norm)
 
-lp_data <- lp_data[!duplicated(cc), ]                                                 # ¥h°£­«½Æ¸ê®Æ
+lp_data <- lp_data[!duplicated(cc), ]                                                 # å»é™¤é‡è¤‡è³‡æ–™
 cc <- cbind(lp_data$mean_norm,lp_data$TSignal_norm, lp_data$wc_norm, lp_data$wp_norm) # alternatives
 
 # start LP settings
-f.con0 <- matrix(c(rbind(cc[,1],cc[,2],cc[,3],cc[,4])), nrow=nrow(cc), byrow=TRUE)    # eq(7)
+f.con0 <- matrix(c(rbind(cc[,1],cc[,2],cc[,3],cc[,4])), nrow=nrow(cc), byrow=TRUE)    # eq(2)
 f.dir0 <- c(rep("<=",nrow(cc)))
 f.rhs0 <- rep(1,nrow(cc))
 
-f.con <- matrix(c(rbind(cc[,1],cc[,2],cc[,3],cc[,4]),1,1,1,1), nrow=nrow(cc)+1, byrow=TRUE)   # eq(7) & eq(11)
+f.con <- matrix(c(rbind(cc[,1],cc[,2],cc[,3],cc[,4]),1,1,1,1), nrow=nrow(cc)+1, byrow=TRUE)   # eq(2) & eq(6)
 f.dir <- c(rep("<=",nrow(cc)),'=')
 f.rhs <- rep(1,nrow(cc)+1)
 
@@ -37,7 +37,7 @@ f.con1 <- f.con
 f.dir1 <- f.dir
 f.rhs1 <- f.rhs
 
-for(i in 1:4){                                   # eq(8)
+for(i in 1:4){                                   # eq(3)
   row_e <- rep(0,4)
   row_e[i] <- 1
   f.con1 <- rbind(f.con1,row_e)
@@ -49,7 +49,7 @@ f.con2 <- f.con1
 f.dir2 <- f.dir1
 f.rhs2 <- f.rhs1
 
-for(i in 1:3){                                  # eq(10)
+for(i in 1:3){                                  # eq(5)
   row_e <- rep(0,4)
   row_e[i] <- 1
   row_e[i+1] <- -1
@@ -58,7 +58,7 @@ for(i in 1:3){                                  # eq(10)
   f.rhs2 <- c(f.rhs2,0)
 }
 
-# ³]©wÅÜ¼Æ
+# è¨­å®šè®Šæ•¸
 objvals0 <- rep(0.0,nrow(cc))
 objvals1 <- rep(0.0,nrow(cc))
 objvals2 <- rep(0.0,nrow(cc))
@@ -81,109 +81,109 @@ pb   <- txtProgressBar(max = nrow(cc), style=3)
 
 # solve LP
 
-# eq(7)
-# ¨Drank0ªº¸Ñ
-start_model_time <- Sys.time()                   # µ{¦¡¹B¦æ®É¶¡
-for(i in 1:nrow(cc)){                            # eq(9)
+# eq(2)
+# æ±‚rank0çš„è§£
+start_model_time <- Sys.time()                   # ç¨‹å¼é‹è¡Œæ™‚é–“
+for(i in 1:nrow(cc)){                            # eq(4)
   f.obj0 <- c(cc[i,1],cc[i,2],cc[i,3],cc[i,4])   # for each item
   result <- lp("max",f.obj0,f.con0,f.dir0,f.rhs0)
   objvals0[i] <- result$objval
   solutions0[i,] <- result$solution
-  feasible0[i] <- if(result$status == 2){        # §PÂ_¬O§_¥i¦æ
-    "¤£¥i¦æ"
+  feasible0[i] <- if(result$status == 2){        # åˆ¤æ–·æ˜¯å¦å¯è¡Œ
+    "ä¸å¯è¡Œ"
   }else{
-    "¥i¦æ"
+    "å¯è¡Œ"
   }
-  setTxtProgressBar(pb, i)                       # µ{¦¡¹B¦æ¶i«×±ø
+  setTxtProgressBar(pb, i)                       # ç¨‹å¼é‹è¡Œé€²åº¦æ¢
 }
 end_model_time <- Sys.time()
 duration0 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(7) & eq(8) & eq(11)
-# ¨Drank1ªº¸Ñ
-start_model_time <- Sys.time()                   # µ{¦¡¹B¦æ®É¶¡
-for(i in 1:nrow(cc)){                            # eq(9)
+# eq(2) & eq(3) & eq(6)
+# æ±‚rank1çš„è§£
+start_model_time <- Sys.time()                   # ç¨‹å¼é‹è¡Œæ™‚é–“
+for(i in 1:nrow(cc)){                            # eq(4)
   f.obj1 <- c(cc[i,1],cc[i,2],cc[i,3],cc[i,4])   # for each item
   result <- lp("max",f.obj1,f.con1,f.dir1,f.rhs1)
   objvals1[i] <- result$objval
   solutions1[i,] <- result$solution
-  feasible1[i] <- if(result$status == 2){        # §PÂ_¬O§_¥i¦æ
-    "¤£¥i¦æ"
+  feasible1[i] <- if(result$status == 2){        # åˆ¤æ–·æ˜¯å¦å¯è¡Œ
+    "ä¸å¯è¡Œ"
   }else{
-    "¥i¦æ"
+    "å¯è¡Œ"
   }
-  setTxtProgressBar(pb, i)                       # µ{¦¡¹B¦æ¶i«×±ø
+  setTxtProgressBar(pb, i)                       # ç¨‹å¼é‹è¡Œé€²åº¦æ¢
 }
 end_model_time <- Sys.time()
 duration1 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(7) & eq(8) & eq(11)
-# ¨Drank2ªº¸Ñ
-start_model_time <- Sys.time()                   # µ{¦¡¹B¦æ®É¶¡
+# eq(2) & eq(3) & eq(6)
+# æ±‚rank2çš„è§£
+start_model_time <- Sys.time()                   # ç¨‹å¼é‹è¡Œæ™‚é–“
 for(i in 1:nrow(cc)){
   for(j in 1:nrow(cc)){
-    sijp1[j,i] <- sum(solutions1[j,]*cc[i,])     # eq(9')
+    sijp1[j,i] <- sum(solutions1[j,]*cc[i,])     # eq(4')
   }
-  sip1[i] <- mean(sijp1[,i])                     # eq(10')
-  setTxtProgressBar(pb, i)                       # µ{¦¡¹B¦æ¶i«×±ø
+  sip1[i] <- mean(sijp1[,i])                     # eq(5')
+  setTxtProgressBar(pb, i)                       # ç¨‹å¼é‹è¡Œé€²åº¦æ¢
 }
 end_model_time <- Sys.time()
 duration2 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(7) & eq(8) & eq(10) & eq(11)
-# ¨Drank3ªº¸Ñ
-start_model_time <- Sys.time()                   # µ{¦¡¹B¦æ®É¶¡
-for(i in 1:nrow(cc)){                            # eq(9)
+# eq(2) & eq(3) & eq(5) & eq(6)
+# æ±‚rank3çš„è§£
+start_model_time <- Sys.time()                   # ç¨‹å¼é‹è¡Œæ™‚é–“
+for(i in 1:nrow(cc)){                            # eq(4)
   f.obj2 <- c(cc[i,1],cc[i,2],cc[i,3],cc[i,4])   # for each item
   result <- lp("max",f.obj2,f.con2,f.dir2,f.rhs2)
   objvals2[i] <- result$objval
   solutions2[i,] <- result$solution
-  feasible2[i] <- if(result$status == 2){        # §PÂ_¬O§_¥i¦æ
-    "¤£¥i¦æ"
+  feasible2[i] <- if(result$status == 2){        # åˆ¤æ–·æ˜¯å¦å¯è¡Œ
+    "ä¸å¯è¡Œ"
   }else{
-    "¥i¦æ"
+    "å¯è¡Œ"
   }
-  setTxtProgressBar(pb, i)                       # µ{¦¡¹B¦æ¶i«×±ø
+  setTxtProgressBar(pb, i)                       # ç¨‹å¼é‹è¡Œé€²åº¦æ¢
 }
 end_model_time <- Sys.time()
 duration3 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(7) & eq(8) & eq(10) & eq(11)
-# ¨Drank4ªº¸Ñ
-start_model_time <- Sys.time()                   # µ{¦¡¹B¦æ®É¶¡
+# eq(2) & eq(3) & eq(5) & eq(6)
+# æ±‚rank4çš„è§£
+start_model_time <- Sys.time()                   # ç¨‹å¼é‹è¡Œæ™‚é–“
 for(i in 1:nrow(cc)){                                             
   for(j in 1:nrow(cc)){
-    sijp2[j,i] <- sum(solutions2[j,]*cc[i,])     # eq(9')
+    sijp2[j,i] <- sum(solutions2[j,]*cc[i,])     # eq(4')
   }
-  sip2[i] <- mean(sijp2[,i])                     # eq(10')
-  setTxtProgressBar(pb, i)                       # µ{¦¡¹B¦æ¶i«×±ø
+  sip2[i] <- mean(sijp2[,i])                     # eq(5')
+  setTxtProgressBar(pb, i)                       # ç¨‹å¼é‹è¡Œé€²åº¦æ¢
 }
 end_model_time <- Sys.time()
 duration4 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-#rankªºÅÜ¼Æ³]©w
+#rankçš„è®Šæ•¸è¨­å®š
 rank0 <- rank(-objvals0,ties.method="min")
 rank1 <- rank(-objvals1,ties.method="min")
 rank2 <- rank(-sip1,ties.method="min") 
 rank3 <- rank(-objvals2,ties.method="min")
 rank4 <- rank(-sip2,ties.method="min")
 
-# ­«½Æªº¼Æ¶q
+# é‡è¤‡çš„æ•¸é‡
 duplicate0 <- sum(duplicated(rank0))
 duplicate1 <- sum(duplicated(rank1))        
 duplicate2 <- sum(duplicated(rank2))
 duplicate3 <- sum(duplicated(rank3))
 duplicate4 <- sum(duplicated(rank4))
 
-#¦X¨Ö©Ò¨Dªº¸ê®Æ
-lp_sol_final2 <- cbind(lp_data,objvals0,rank0,solutions0,feasible0,objvals1,rank1,solutions1,feasible1,sip1,rank2,objvals2,rank3,solutions2,feasible2,sip2,rank4)
+#åˆä½µæ‰€æ±‚çš„è³‡æ–™
+lp_sol_final1 <- cbind(lp_data,objvals0,rank0,solutions0,feasible0,objvals1,rank1,solutions1,feasible1,sip1,rank2,objvals2,rank3,solutions2,feasible2,sip2,rank4)
 
-#§PÂ_­«½Æªº¼Æ¶q»P°õ¦æªº®É¶¡
-cat(paste("rank0­«½Æªº¼Æ¶q",duplicate0,"°õ¦æªº®É¶¡",duration0),"\n",
-    paste("rank1­«½Æªº¼Æ¶q",duplicate1,"°õ¦æªº®É¶¡",duration1),"\n",
-    paste("rank2­«½Æªº¼Æ¶q",duplicate2,"°õ¦æªº®É¶¡",duration2),"\n",
-    paste("rank3­«½Æªº¼Æ¶q",duplicate3,"°õ¦æªº®É¶¡",duration3),"\n",
-    paste("rank4­«½Æªº¼Æ¶q",duplicate4,"°õ¦æªº®É¶¡",duration4),sep="")
+#åˆ¤æ–·é‡è¤‡çš„æ•¸é‡èˆ‡åŸ·è¡Œçš„æ™‚é–“
+cat(paste("rank0é‡è¤‡çš„æ•¸é‡",duplicate0,"åŸ·è¡Œçš„æ™‚é–“",duration0),"\n",
+    paste("rank1é‡è¤‡çš„æ•¸é‡",duplicate1,"åŸ·è¡Œçš„æ™‚é–“",duration1),"\n",
+    paste("rank2é‡è¤‡çš„æ•¸é‡",duplicate2,"åŸ·è¡Œçš„æ™‚é–“",duration2),"\n",
+    paste("rank3é‡è¤‡çš„æ•¸é‡",duplicate3,"åŸ·è¡Œçš„æ™‚é–“",duration3),"\n",
+    paste("rank4é‡è¤‡çš„æ•¸é‡",duplicate4,"åŸ·è¡Œçš„æ™‚é–“",duration4),sep="")
 
-#¼g¤JÀÉ®×
+#å¯«å…¥æª”æ¡ˆ
 write.xlsx(lp_sol_final2,"lp_sol_final2.xlsx")
