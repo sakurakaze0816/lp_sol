@@ -37,7 +37,7 @@ f.con1 <- f.con
 f.dir1 <- f.dir
 f.rhs1 <- f.rhs
 
-for(i in 1:4){                                   # eq(8)
+for(i in 1:4){                                   # eq(3)
   row_e <- rep(0,4)
   row_e[i] <- 1
   f.con1 <- rbind(f.con1,row_e)
@@ -99,7 +99,7 @@ for(i in 1:nrow(cc)){                            # eq(9)
 end_model_time <- Sys.time()
 duration0 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(2) & eq(8) & eq(11)
+# eq(2) & eq(3) & eq(11)
 # 求rank1的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                            # eq(9)
@@ -117,7 +117,7 @@ for(i in 1:nrow(cc)){                            # eq(9)
 end_model_time <- Sys.time()
 duration1 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(2) & eq(8) & eq(11)
+# eq(2) & eq(3) & eq(11)
 # 求rank2的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){
@@ -130,7 +130,7 @@ for(i in 1:nrow(cc)){
 end_model_time <- Sys.time()
 duration2 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(2) & eq(8) & eq(10) & eq(11)
+# eq(2) & eq(3) & eq(10) & eq(11)
 # 求rank3的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                            # eq(9)
@@ -148,7 +148,7 @@ for(i in 1:nrow(cc)){                            # eq(9)
 end_model_time <- Sys.time()
 duration3 <- as.numeric(difftime(end_model_time, start_model_time, units = "secs"))
 
-# eq(2) & eq(8) & eq(10) & eq(11)
+# eq(2) & eq(3) & eq(10) & eq(11)
 # 求rank4的解
 start_model_time <- Sys.time()                   # 程式運行時間
 for(i in 1:nrow(cc)){                                             
